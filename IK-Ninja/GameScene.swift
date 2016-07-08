@@ -35,6 +35,14 @@ class GameScene: SKScene {
   var lowerArmBack: SKNode!
   var fistBack: SKNode!
   
+  var upperLegFront: SKNode!
+  var lowerLegFront: SKNode!
+  var footFront: SKNode!
+  
+  var upperLegBack: SKNode!
+  var lowerLegBack: SKNode!
+  var footBack: SKNode!
+  
   let upperArmAngleDeg: CGFloat = -10
   let lowerArmAngleDeg: CGFloat = 130
   var rightPunch = true
@@ -44,6 +52,8 @@ class GameScene: SKScene {
   let targetNode = SKNode()
   var lastSpawnTimeInterval: NSTimeInterval = 0
   var lastUpdateTimeInterval: NSTimeInterval = 0
+  let upperLegAngleDeg: CGFloat = 22
+  let lowerLegAngleDeg: CGFloat = -30
   
   override func didMoveToView(view: SKView) {
     // torso
@@ -66,6 +76,20 @@ class GameScene: SKScene {
     fistBack = lowerArmBack.childNodeWithName("fist_back")
     lowerArmBack.reachConstraints = SKReachConstraints(lowerAngleLimit: 0.0, upperAngleLimit: 160.0)
     
+    // front leg
+    upperLegFront = lowerTorso.childNodeWithName("leg_upper_front")
+    lowerLegFront = upperLegFront.childNodeWithName("leg_lower_front")
+    footFront = lowerLegFront.childNodeWithName("foot_front")
+//    upperLegFront.reachConstraints = SKReachConstraints(lowerAngleLimit: -45.0, upperAngleLimit: 160.0)
+    
+    // back leg
+    upperLegBack = lowerTorso.childNodeWithName("leg_upper_back")
+    lowerLegBack = upperLegBack.childNodeWithName("leg_lower_back")
+    footBack = lowerLegBack.childNodeWithName("foot_back")
+    upperLegBack.reachConstraints = SKReachConstraints(lowerAngleLimit: -45.0, upperAngleLimit: 160.0)
+    lowerLegBack.reachConstraints = SKReachConstraints(lowerAngleLimit: -45.0, upperAngleLimit: 0.0)
+    
+    // used to have the ninjas head match where they are punching
     let orientToNodeConstraint = SKConstraint.orientToNode(targetNode, offset: SKRange(constantValue: 0.0))
     let range = SKRange(lowerLimit: CGFloat(-50).degreesToRadians(),
                         upperLimit: CGFloat(80).degreesToRadians())
@@ -101,6 +125,21 @@ class GameScene: SKScene {
       punchAtLocation(location, upperArmNode: upperArmBack, lowerArmNode: lowerArmBack, fistNode: fistBack)
     }
     rightPunch = !rightPunch
+  }
+  
+  
+  // MARK: - Kicking
+  func kickAtLocation(location: CGPoint) {
+    let kick = SKAction.reachTo(location, rootNode: upperLegBack, duration: 0.1)
+    
+    let restore = SKAction.runBlock {
+      self.upperLegBack.runAction(SKAction.rotateToAngle(self.upperLegAngleDeg.degreesToRadians(), duration: 0.1))
+      self.lowerLegBack.runAction(SKAction.rotateToAngle(self.lowerLegAngleDeg.degreesToRadians(), duration: 0.1))
+    }
+    
+    let checkIntersection = intersectionCheckActionForNode(footBack)
+    
+    footBack.runAction(SKAction.sequence([kick, checkIntersection, restore]))
   }
   
   
@@ -213,7 +252,13 @@ class GameScene: SKScene {
       let location = touch.locationInNode(self)
       lowerTorso.xScale =
         location.x < CGRectGetMidX(frame) ? abs(lowerTorso.xScale) * -1 : abs(lowerTorso.xScale)
-      punchAtLocation(location)
+      let lower = location.y < lowerTorso.position.y + 10
+      if lower {
+        kickAtLocation(location)
+      }
+      else {
+        punchAtLocation(location)
+      }
       targetNode.position = location
     }
   }
