@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1466A17D1D302387001DD56F /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1466A17C1D302387001DD56F /* GameOverScene.swift */; };
 		D90F6C5419BC101200A203F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90F6C5319BC101200A203F4 /* AppDelegate.swift */; };
 		D90F6C5619BC101200A203F4 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = D90F6C5519BC101200A203F4 /* GameScene.sks */; };
 		D90F6C5819BC101200A203F4 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90F6C5719BC101200A203F4 /* GameScene.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1466A17C1D302387001DD56F /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		D90F6C4E19BC101200A203F4 /* IK-Ninja.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IK-Ninja.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D90F6C5219BC101200A203F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D90F6C5319BC101200A203F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				D90F6C5319BC101200A203F4 /* AppDelegate.swift */,
 				D90F6C5519BC101200A203F4 /* GameScene.sks */,
 				D90F6C5719BC101200A203F4 /* GameScene.swift */,
+				1466A17C1D302387001DD56F /* GameOverScene.swift */,
 				D90F6C5919BC101200A203F4 /* GameViewController.swift */,
 				D90F6C5119BC101200A203F4 /* Supporting Files */,
 			);
@@ -264,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1466A17D1D302387001DD56F /* GameOverScene.swift in Sources */,
 				D90F6C5819BC101200A203F4 /* GameScene.swift in Sources */,
 				D90F6C5A19BC101200A203F4 /* GameViewController.swift in Sources */,
 				D90F6C7619BC105100A203F4 /* CGFloat+Extensions.swift in Sources */,

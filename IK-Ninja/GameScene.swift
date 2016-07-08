@@ -55,6 +55,31 @@ class GameScene: SKScene {
   let upperLegAngleDeg: CGFloat = 22
   let lowerLegAngleDeg: CGFloat = -30
   
+  var score: Int = 0
+  var life: Int = 3
+  
+  lazy var scoreLabel: SKLabelNode = {
+    let label: SKLabelNode = SKLabelNode()
+    label.fontName = "Chalkduster"
+    label.text = "Score: 0"
+    label.fontSize = 20
+    label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Left
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Top
+    label.position = CGPoint(x: 10, y: self.size.height -  10)
+    return label
+  }()
+  
+  lazy var livesLabel: SKLabelNode = {
+    let label: SKLabelNode = SKLabelNode()
+    label.fontName = "Chalkduster"
+    label.text = "Lives: 3"
+    label.fontSize = 20
+    label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Right
+    label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Top
+    label.position = CGPoint(x: self.size.width - 10, y: self.size.height - 10)
+    return label
+  }()
+  
   override func didMoveToView(view: SKView) {
     // torso
     lowerTorso = childNodeWithName("torso_lower")
@@ -97,6 +122,9 @@ class GameScene: SKScene {
     rotationConstraint.enabled = false
     orientToNodeConstraint.enabled = false
     head.constraints = [orientToNodeConstraint, rotationConstraint]
+    
+    self.addChild(scoreLabel)
+    self.addChild(livesLabel)
   }
   
   
@@ -167,7 +195,25 @@ class GameScene: SKScene {
     
     let actionMove = SKAction.moveTo(CGPointMake(size.width/2, actualY), duration: actualDuration)
     let actionMoveDone = SKAction.removeFromParent()
-    shuriken.runAction(SKAction.sequence([actionMove, actionMoveDone]))
+    let hitAction = SKAction.runBlock({
+      if self.life > 0 {
+        self.life -= 1
+      }
+      
+      self.livesLabel.text = "Lives: \(Int(self.life))"
+      let blink = SKAction.sequence([SKAction.fadeOutWithDuration(0.05), SKAction.fadeInWithDuration(0.05)])
+
+      let checkGameOverAction = SKAction.runBlock({
+        if self.life <= 0 {
+          let transition = SKTransition.fadeWithDuration(1.0)
+          let gameOverScene = GameOverScene(size: self.size)
+          self.view?.presentScene(gameOverScene, transition: transition)
+        }
+      })
+      self.lowerTorso.runAction(SKAction.sequence([blink, blink, checkGameOverAction]))
+    })
+    
+    shuriken.runAction(SKAction.sequence([actionMove, hitAction, actionMoveDone]))
     
     let angle = left == 0 ? CGFloat(-90).degreesToRadians() : CGFloat(90).degreesToRadians()
     let rotate = SKAction.repeatActionForever(SKAction.rotateByAngle(angle, duration: 0.2))
@@ -223,7 +269,9 @@ class GameScene: SKScene {
               let cleanUpAction = SKAction.removeFromParent()
               spark.runAction(SKAction.sequence([fadeAndScaleAction, cleanUpAction]))
               
-              // remove the shuriken
+              // remove the shuriken and update score
+              self.score += 1
+              self.scoreLabel.text = "Score: \(Int(self.score))"
               node.removeFromParent()
             }
             else {
