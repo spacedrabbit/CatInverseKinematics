@@ -29,19 +29,27 @@ class GameScene: SKScene {
   var upperArmFront: SKNode!
   var lowerArmFront: SKNode!
   var fistFront: SKNode!
+  var upperArmBack: SKNode!
+  var lowerArmBack: SKNode!
   
   override func didMoveToView(view: SKView) {
-    shadow  = childNodeWithName("shadow")
-    
+    // torso
     lowerTorso = childNodeWithName("torso_lower")
     upperTorso = lowerTorso.childNodeWithName("torso_upper")
+    shadow  = childNodeWithName("shadow")
+    lowerTorso.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMidY(frame) - 30)
+    shadow.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMidY(frame) - 100)
     
+    // front arm
     upperArmFront = upperTorso.childNodeWithName("arm_upper_front")
     lowerArmFront = upperArmFront.childNodeWithName("arm_lower_front")
     fistFront = lowerArmFront.childNodeWithName("fist_front")
+    lowerArmFront.reachConstraints = SKReachConstraints(lowerAngleLimit: 0.0, upperAngleLimit: 160.0)
     
-    lowerTorso.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMidY(frame) - 30)
-    shadow.position = CGPoint(x: CGRectGetMidX(frame), y: CGRectGetMidY(frame) - 100)
+    // back arm
+    upperArmBack = upperTorso.childNodeWithName("arm_upper_back")
+    lowerArmBack = upperArmBack.childNodeWithName("arm_lower_back")
+    lowerArmBack.reachConstraints = SKReachConstraints(lowerAngleLimit: 0.0, upperAngleLimit: 160.0)
   }
   
   func punchAtLocation(location: CGPoint) {
