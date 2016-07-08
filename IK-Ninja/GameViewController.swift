@@ -20,8 +20,11 @@
  THE SOFTWARE.
  */
 
+
+// Tutorial found here: https://www.raywenderlich.com/129895/sprite-kit-inverse-kinematics-swift-2
 import UIKit
 import SpriteKit
+import AVFoundation
 
 extension SKNode {
   class func unarchiveFromFile(file : NSString) -> SKNode? {
@@ -40,6 +43,7 @@ extension SKNode {
 }
 
 class GameViewController: UIViewController {
+  var audioPlayer: AVAudioPlayer?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -56,7 +60,19 @@ class GameViewController: UIViewController {
       /* Set the scale mode to scale to fit the window */
       scene.scaleMode = .AspectFill
       
+      startBackgroundMusic()
       skView.presentScene(scene)
+    }
+  }
+  
+  func startBackgroundMusic() {
+    if let path = NSBundle.mainBundle().pathForResource("bg", ofType: "mp3") {
+      audioPlayer = try! AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: path), fileTypeHint: "mp3")
+      if let player = audioPlayer {
+        player.prepareToPlay()
+        player.numberOfLoops = -1
+        player.play()
+      }
     }
   }
   
